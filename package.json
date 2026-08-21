@@ -1,0 +1,39 @@
+{
+  "name": "isa-cli",
+  "version": "0.1.0",
+  "description": "ISA — Issues-as-Code CLI. Keep the why of every change in docs/issues/ inside the repository and trace it through Git commit trailers.",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "skills",
+    "README.md"
+  ],
+  "bin": {
+    "isa": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "issues-as-code",
+    "traceability",
+    "cli",
+    "ai-agents",
+    "git"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@vitest/coverage-v8": "^3.2.7",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  }
+}

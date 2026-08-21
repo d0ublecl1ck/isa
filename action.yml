@@ -1,0 +1,21 @@
+name: ISA Issue Sync
+description: Mirror repository Issues-as-Code to GitHub Issues after a default-branch push.
+author: ISA
+branding:
+  icon: refresh-cw
+  color: blue
+runs:
+  using: composite
+  steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+    - name: Build and run ISA Issue sync
+      shell: bash
+      env:
+        GITHUB_TOKEN: "${{ github.token }}"
+        GITHUB_REPOSITORY: "${{ github.repository }}"
+      run: |
+        set -euo pipefail
+        npm ci --ignore-scripts --prefix "$GITHUB_ACTION_PATH"
+        npm run build --prefix "$GITHUB_ACTION_PATH"
+        node "$GITHUB_ACTION_PATH/dist/cli.js" sync -t "$GITHUB_WORKSPACE"

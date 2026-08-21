@@ -107,7 +107,7 @@ npm run build
 npm test
 ```
 
-ISA was extracted from the Issues-as-Code implementation in [archkit](https://github.com/d0ublecl1ck/archkit) and is maintained as a standalone, focused tool.
+ISA is maintained as a standalone, focused tool for Issues-as-Code.
 
 ## License
 

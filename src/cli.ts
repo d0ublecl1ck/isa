@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // ISA — Issues-as-Code CLI entry point.
-import { readFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { existsSync, realpathSync } from "node:fs";
+import { readFile, stat } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runIssueCommand } from "./commands.js";
 import { inspectIssueDocuments } from "./issues.js";
@@ -51,7 +52,7 @@ Single-commit close: run "isa close <id> --prepare" before committing, then add 
 
 A later "isa close <id>" then only verifies the binding and creates no extra commit.`;
 
-interface ParsedArgs {
+export interface ParsedArgs {
   action?: string;
   values: string[];
   targetRoot?: string;
@@ -70,7 +71,7 @@ interface ParsedArgs {
   version?: boolean;
 }
 
-function parseArgs(argv: string[]): ParsedArgs {
+export function parseArgs(argv: string[]): ParsedArgs {
   const parsed: ParsedArgs = { values: [] };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -106,6 +107,8 @@ function parseArgs(argv: string[]): ParsedArgs {
       throw new Error(`Unsupported flag "${arg}".`);
     } else if (parsed.action === undefined && ACTIONS.has(arg)) {
       parsed.action = arg;
+    } else if (parsed.action === undefined) {
+      throw new Error(`Unknown command "${arg}". Run "isa --help" for usage.`);
     } else {
       parsed.values.push(arg);
     }
@@ -135,31 +138,44 @@ async function readVersion(): Promise<string> {
   return manifest.version ?? "0.0.0";
 }
 
-async function main(): Promise<void> {
-  const parsed = parseArgs(process.argv.slice(2));
+export interface CliResult {
+  output: string;
+  exitCode: number;
+}
+
+export async function runCli(argv: string[]): Promise<CliResult> {
+  const parsed = parseArgs(argv);
   if (parsed.version) {
-    console.log(await readVersion());
-    return;
+    return { output: await readVersion(), exitCode: 0 };
   }
-  if (parsed.help || parsed.action === undefined) {
-    console.log(HELP);
-    if (parsed.action === undefined && !parsed.help) {
-      process.exitCode = 1;
-    }
-    return;
+  if (parsed.help) {
+    return { output: HELP, exitCode: 0 };
+  }
+  if (parsed.action === undefined) {
+    return { output: HELP, exitCode: 1 };
   }
   if (parsed.action === "check") {
     if (parsed.values.length > 0) {
       throw new Error("check takes no positional arguments.");
     }
-    const errors = await inspectIssueDocuments(parsed.targetRoot ?? ".");
-    if (errors.length > 0) {
-      console.error(errors.join("\n"));
-      process.exitCode = 1;
-      return;
+    const root = resolve(parsed.targetRoot ?? ".");
+    const rootStat = await stat(root).catch((error: unknown) => {
+      if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") {
+        return undefined;
+      }
+      throw error;
+    });
+    if (!rootStat?.isDirectory()) {
+      throw new Error(`check target root does not exist or is not a directory: ${parsed.targetRoot ?? "."}`);
     }
-    console.log("All Issues-as-Code documents are valid.");
-    return;
+    if (!existsSync(join(root, "docs", "issues"))) {
+      return { output: "No docs/issues/ directory found; nothing to check.", exitCode: 0 };
+    }
+    const errors = await inspectIssueDocuments(root);
+    if (errors.length > 0) {
+      return { output: errors.join("\n"), exitCode: 1 };
+    }
+    return { output: "All Issues-as-Code documents are valid.", exitCode: 0 };
   }
   const output = await runIssueCommand({
     action: parsed.action,
@@ -177,10 +193,36 @@ async function main(): Promise<void> {
     force: parsed.force,
     section: parsed.section
   });
-  console.log(output);
+  return { output, exitCode: 0 };
 }
 
-main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exitCode = 1;
-});
+async function main(): Promise<void> {
+  try {
+    const result = await runCli(process.argv.slice(2));
+    if (result.exitCode === 0) {
+      console.log(result.output);
+    } else {
+      console.error(result.output);
+    }
+    process.exitCode = result.exitCode;
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
+
+const invokedAsScript = (() => {
+  const entry = process.argv[1];
+  if (!entry) {
+    return false;
+  }
+  try {
+    return realpathSync(entry) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+})();
+
+if (invokedAsScript) {
+  void main();
+}

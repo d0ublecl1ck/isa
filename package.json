@@ -4,6 +4,12 @@
   "description": "ISA — Issues-as-Code CLI. Keep the why of every change in docs/issues/ inside the repository and trace it through Git commit trailers.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d0ublecl1ck/isa.git"
+  },
+  "homepage": "https://github.com/d0ublecl1ck/isa#readme",
+  "bugs": "https://github.com/d0ublecl1ck/isa/issues",
   "files": [
     "dist",
     "skills",

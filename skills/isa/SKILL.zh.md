@@ -84,5 +84,4 @@ isa close <id>
 
 - **先提交后 `isa new`**：trailer 会指向补录的 issue，`trace` 历史就是在说谎。先 issue，后代码。
 - **trailer 缺失或多余**：`close` 会拒绝这段提交范围。每个非合并提交恰好一个 trailer。
-- **为了通过校验而改写 issue 正文措辞**：当 `start`/`close` 校验误伤合法内容时，直接编辑 issue front matter 绕过；绝不为迎合检查而改写合法内容。
 - **以为 `sync` 是自动的**：它是显式且本地优先的；你不运行，就不会同步。

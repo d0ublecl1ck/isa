@@ -16,6 +16,8 @@ ISA ships an agent skill (`skills/isa/`) so AI coding agents adopt the same disc
 npm install -g isa-cli
 ```
 
+> The package is pending its first npm publish; until then, install from source: `git clone <repo> && npm install && npm run build && npm link`.
+
 Requires Node.js ≥ 20. `isa sync` additionally requires the [GitHub CLI](https://cli.github.com/) (`gh`).
 
 ## Quick start

@@ -358,7 +358,14 @@ describe("runIssueCommand", () => {
     const output = await runIssueCommand({ action: "close", values: ["a1b2c"], targetRoot: root, dryRun: false });
     const closed = await readFile(join(root, "docs", "issues", "closed", "a1b2c-complete-issue.md"), "utf8");
 
-    expect(output).toBe("closed docs/issues/closed/a1b2c-complete-issue.md");
+    expect(output).toBe([
+      "closed docs/issues/closed/a1b2c-complete-issue.md",
+      "",
+      "Commit the archived status flip with both trailers:",
+      "",
+      "Issue: a1b2c",
+      "Closes: a1b2c"
+    ].join("\n"));
     expect(closed).toContain("status: closed");
     expect(closed).toContain("closed_at:");
     expect(await readdir(join(root, "docs", "issues"))).not.toContain("a1b2c-complete-issue.md");

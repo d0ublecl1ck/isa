@@ -84,5 +84,4 @@ For a single-commit close, run `isa close <id> --prepare` before committing: it 
 
 - **Committing before `isa new`**: the trailer then points at a backfilled issue and `trace` history lies. Issue first, code second.
 - **Multiple or missing trailers**: `close` rejects the range. Exactly one trailer per non-merge commit.
-- **Rewriting issue body wording to pass validation**: when `start`/`close` validation rejects legitimate content, edit the issue front matter directly to work around it; never reword legitimate content just to satisfy the check.
 - **Expecting `sync` to be automatic**: it is explicit and local-first; nothing syncs unless you run it.

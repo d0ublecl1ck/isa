@@ -173,7 +173,14 @@ export async function runIssueCommand(args: IssueCommandArgs): Promise<string> {
       closed_at: now
     }, issue.body, args.dryRun);
     const archivedPath = await archiveIssueDocument(issue, args.dryRun);
-    return `${args.dryRun ? "dry-run" : "closed"} ${archivedPath}`;
+    return [
+      `${args.dryRun ? "dry-run" : "closed"} ${archivedPath}`,
+      "",
+      "Commit the archived status flip with both trailers:",
+      "",
+      `Issue: ${issue.metadata.id}`,
+      `Closes: ${issue.metadata.id}`
+    ].join("\n");
   }
 
   if (args.action === "cancel") {

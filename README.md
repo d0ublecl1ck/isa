@@ -13,7 +13,7 @@ ISA ships an agent skill (`skills/isa/`) so AI coding agents adopt the same disc
 ## Install
 
 ```bash
-npm install -g isa-cli
+npm install -g @d0ublecl1ck/isa-cli
 ```
 
 > The package is pending its first npm publish; until then, install from source: `git clone <repo> && npm install && npm run build && npm link`.

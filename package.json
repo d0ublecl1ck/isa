@@ -1,5 +1,5 @@
 {
-  "name": "isa-cli",
+  "name": "@d0ublecl1ck/isa-cli",
   "version": "0.1.0",
   "description": "ISA — Issues-as-Code CLI. Keep the why of every change in docs/issues/ inside the repository and trace it through Git commit trailers.",
   "type": "module",

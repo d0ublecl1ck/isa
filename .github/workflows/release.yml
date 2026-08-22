@@ -70,7 +70,7 @@ jobs:
   # unaffected. This job lives in this file because npm trusted publishing
   # authorizes a single workflow file per package.
   #
-  # Users opt in with: npm install -g isa-cli@beta
+  # Users opt in with: npm install -g @d0ublecl1ck/isa-cli@beta
   beta:
     if: github.repository == 'd0ublecl1ck/isa' && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
             if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
               TAG_EXISTS=true
             fi
-            if npm view "isa-cli@${VERSION}" version >/dev/null 2>&1; then
+            if npm view "@d0ublecl1ck/isa-cli@${VERSION}" version >/dev/null 2>&1; then
               NPM_EXISTS=true
             fi
             if gh release view "${TAG}" >/dev/null 2>&1; then
@@ -144,8 +144,8 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          if npm view "isa-cli@${VERSION}" version >/dev/null 2>&1; then
-            echo "isa-cli@${VERSION} is already on npm; skipping publish."
+          if npm view "@d0ublecl1ck/isa-cli@${VERSION}" version >/dev/null 2>&1; then
+            echo "@d0ublecl1ck/isa-cli@${VERSION} is already on npm; skipping publish."
             exit 0
           fi
           npm publish --tag beta
@@ -181,5 +181,5 @@ jobs:
               --prerelease \
               --generate-notes \
               --title "${TAG}" \
-              --notes "Beta prerelease. Install with \`npm install -g isa-cli@beta\`."
+              --notes "Beta prerelease. Install with \`npm install -g @d0ublecl1ck/isa-cli@beta\`."
           fi

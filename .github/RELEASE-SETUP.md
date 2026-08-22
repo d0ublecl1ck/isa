@@ -11,6 +11,8 @@ ISA 的发布流程移植自 [OpenSpec](https://github.com/Fission-AI/OpenSpec)�
 
 ## 一次性凭据配置清单（仓库 owner 完成）
 
+> **状态（2026-08-22）：全部完成。** 仓库已推送至 `d0ublecl1ck/isa`，GitHub App、分支保护、npm 首发（0.1.0）与 Trusted Publisher 连接均已就绪，beta OIDC 发布链路已验证。以下步骤留作重新配置或迁移时的参考。
+
 代码已落地，以下配置需要在 GitHub / npm 侧手动完成，发布流程才能工作。先创建并推送 `d0ublecl1ck/isa`，再做以下设置。
 
 ### 1. npm OIDC trusted publishing（必需）

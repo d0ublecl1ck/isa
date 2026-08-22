@@ -43,6 +43,8 @@ The release workflow is ready, but the unscoped `isa-cli` name is owned by an un
 - Updated README installation text, beta commands, npm package checks, and release setup documentation.
 - Added `src/package-metadata.test.ts` to assert the scoped package name, executable, and publish access.
 - Created the public GitHub repository `d0ublecl1ck/isa` and configured it as `origin`.
+- Review follow-up: the `archkit inspect --init` / `archkit design init` materialization (`quality-gates/`, `.inspectignore`, `docs/design.md`) was reverted — this repository is managed by ISA itself (`isa check`), and ArchKit gate scaffolding was never adopted here.
+
 
 ## Verification
 
@@ -54,7 +56,7 @@ The release workflow is ready, but the unscoped `isa-cli` name is owned by an un
 - `npm run build` passed.
 - `npm run test:coverage` passed.
 - `npm pack --dry-run --json --ignore-scripts --registry=https://registry.npmjs.org` produced `@d0ublecl1ck/isa-cli@0.1.0` with 17 files.
-- `git diff --check` passed; `origin` points to `https://github.com/d0ublecl1ck/isa.git`.
+- `isa check` passed with every issue document valid.
 
 ## Related ADRs
 

@@ -1,13 +1,14 @@
 ---
 id: 067a2
-status: in-progress
+status: closed
 created_at: 2026-08-22T05:12:44.528Z
-updated_at: 2026-08-22T05:13:55.511Z
+updated_at: 2026-08-22T05:28:32.731Z
 priority: medium
 labels: []
 parent: null
 blocked_by: []
 started_at: 2026-08-22T05:13:55.511Z
+closed_at: 2026-08-22T05:28:32.731Z
 ---
 
 # Port OpenSpec release CI and npm publishing

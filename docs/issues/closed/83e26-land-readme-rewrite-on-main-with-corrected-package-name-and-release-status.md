@@ -1,13 +1,14 @@
 ---
 id: "83e26"
-status: in-progress
+status: closed
 created_at: 2026-08-22T17:35:35.050Z
-updated_at: 2026-08-22T17:36:05.950Z
+updated_at: 2026-08-22T17:38:10.827Z
 priority: medium
 labels: []
 parent: null
 blocked_by: []
 started_at: 2026-08-22T17:36:05.950Z
+closed_at: 2026-08-22T17:38:10.827Z
 ---
 
 # Land README rewrite on main with corrected package name and release status

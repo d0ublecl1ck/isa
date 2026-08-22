@@ -43,7 +43,7 @@ ISA is published as the npm package `isa-cli`, but the repository had no release
 
 Delivered by the frontend engineer under Multica TASK-19; files: `.github/workflows/{release,ci,security}.yml`, `.github/RELEASE-SETUP.md`, `.changeset/config.json`, `package.json`, `package-lock.json`, `tsconfig.test.json`, README Releasing section.
 
-Follow-up from review (tracked in Multica TASK-19, pending): the `All checks passed` aggregate jobs in `ci.yml` do not yet `needs:` the `validate-changesets` job, so an invalid changeset would not block merge under the recommended branch-protection setup.
+Follow-up from review (tracked in Multica TASK-19, resolved): the `All checks passed` aggregate jobs in `ci.yml` now `needs:` the `validate-changesets` job and block on its `failure`/`cancelled` result (`skipped` on `push` treated as pass), so an invalid changeset cannot bypass the gate under the recommended branch-protection setup. Fixed in commit `87491ad` "Gate aggregate checks on validate-changesets".
 
 ## Verification
 

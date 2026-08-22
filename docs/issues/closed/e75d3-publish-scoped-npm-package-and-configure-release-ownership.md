@@ -1,13 +1,14 @@
 ---
 id: e75d3
-status: in-progress
+status: closed
 created_at: 2026-08-22T08:11:34.546Z
-updated_at: 2026-08-22T08:12:01.778Z
+updated_at: 2026-08-22T17:19:34.228Z
 priority: medium
 labels: []
 parent: null
 blocked_by: []
 started_at: 2026-08-22T08:12:01.778Z
+closed_at: 2026-08-22T17:19:34.228Z
 ---
 
 # Publish scoped npm package and configure release ownership
@@ -34,7 +35,7 @@ The release workflow is ready, but the unscoped `isa-cli` name is owned by an un
 - [x] Package metadata uses `@d0ublecl1ck/isa-cli`; the binary remains `isa`.
 - [x] All repository-facing install and release instructions use the scoped package name.
 - [x] Build, tests, type checks, and package inspection pass.
-- [ ] `d0ublecl1ck/isa` is the configured Git remote and `main` is pushed.
+- [x] `d0ublecl1ck/isa` is the configured Git remote and `main` is pushed.
 - [x] Owner-side configuration steps and exact required names are documented for npm and GitHub.
 
 ## Implementation

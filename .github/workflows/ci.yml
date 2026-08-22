@@ -124,6 +124,11 @@ jobs:
             exit 1
           fi
 
+      # Dogfood: this repository practices Issues-as-Code, so CI validates its
+      # own issue documents with the CLI built from the current commit.
+      - name: Validate issue documents (dogfood)
+        run: node dist/cli.js check
+
   validate-changesets:
     name: Validate Release Tracking
     runs-on: ubuntu-latest

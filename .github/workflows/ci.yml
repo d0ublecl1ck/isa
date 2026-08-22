@@ -174,7 +174,7 @@ jobs:
   required-checks-pr:
     name: All checks passed
     runs-on: ubuntu-latest
-    needs: [test_matrix, typecheck]
+    needs: [test_matrix, typecheck, validate-changesets]
     if: always() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
     steps:
       - name: Verify all checks passed
@@ -187,12 +187,17 @@ jobs:
             echo "Type check job failed"
             exit 1
           fi
+          # validate-changesets runs on PR/merge_group; treat "skipped" as pass (GitHub semantics), block on failure/cancelled
+          if [[ "${{ needs.validate-changesets.result }}" != "success" && "${{ needs.validate-changesets.result }}" != "skipped" ]]; then
+            echo "Changeset validation job failed"
+            exit 1
+          fi
           echo "All required checks passed!"
 
   required-checks-main:
     name: All checks passed
     runs-on: ubuntu-latest
-    needs: [test_matrix, typecheck]
+    needs: [test_matrix, typecheck, validate-changesets]
     if: always() && github.event_name == 'push'
     steps:
       - name: Verify all checks passed
@@ -203,6 +208,11 @@ jobs:
           fi
           if [[ "${{ needs.typecheck.result }}" != "success" ]]; then
             echo "Type check job failed"
+            exit 1
+          fi
+          # validate-changesets is skipped on push (PR-only job); block only on failure/cancelled
+          if [[ "${{ needs.validate-changesets.result }}" != "success" && "${{ needs.validate-changesets.result }}" != "skipped" ]]; then
+            echo "Changeset validation job failed"
             exit 1
           fi
           echo "All required checks passed!"

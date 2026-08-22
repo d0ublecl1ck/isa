@@ -1,13 +1,14 @@
 ---
 id: 62e9b
-status: in-progress
+status: closed
 created_at: 2026-08-22T17:14:30.725Z
-updated_at: 2026-08-22T17:15:18.736Z
+updated_at: 2026-08-22T17:19:07.063Z
 priority: medium
 labels: []
 parent: null
 blocked_by: []
 started_at: 2026-08-22T17:15:18.736Z
+closed_at: 2026-08-22T17:19:07.063Z
 ---
 
 # Finalize release ownership: npm trusted publisher connected and beta OIDC verification
@@ -29,16 +30,21 @@ e75d3 prepared the owner-side configuration. All external setup is now done: `ma
 
 ## Acceptance Criteria
 
-- [ ] `RELEASE-SETUP.md` reflects the completed configuration.
-- [ ] Manual beta run publishes `@d0ublecl1ck/isa-cli` to the `beta` dist-tag and creates a prerelease GitHub Release.
+- [x] `RELEASE-SETUP.md` reflects the completed configuration.
+- [x] Manual beta run publishes `@d0ublecl1ck/isa-cli` to the `beta` dist-tag and creates a prerelease GitHub Release.
 
 ## Implementation
 
-<!-- Complete after implementation. -->
+- `.github/RELEASE-SETUP.md` now records that all one-time owner-side configuration is complete (repo push, GitHub App, branch protection, npm first publish, Trusted Publisher).
+- Added patch changeset `.changeset/tidy-pandas-release.md` so the manual beta job had a pending changeset to cut from.
 
 ## Verification
 
-<!-- Add commands and results after verification. -->
+- `npm test` + `npm run typecheck` + `isa check`: pass locally.
+- PR #1 checks: `All checks passed` green.
+- Manual `Release` workflow run 32587299152 (workflow_dispatch from main): beta job green — `Publish to npm under the beta dist-tag` and `Tag and create GitHub prerelease` both succeeded.
+- `npm view @d0ublecl1ck/isa-cli dist-tags` (official registry): `latest: 0.1.0`, `beta: 0.1.1-beta.1`.
+- `gh release list`: `v0.1.1-beta.1` marked Pre-release. OIDC trusted publishing verified end-to-end with no npm token.
 
 ## Related ADRs
 

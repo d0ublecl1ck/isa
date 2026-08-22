@@ -5,13 +5,15 @@ import { readFile, stat } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { runIssueCommand } from "./commands.js";
+import { runInitCommand } from "./init.js";
 import { inspectIssueDocuments } from "./issues.js";
 
-const ACTIONS = new Set(["new", "list", "show", "rename", "start", "close", "cancel", "trace", "attach", "sync", "check"]);
+const ACTIONS = new Set(["init", "new", "list", "show", "rename", "start", "close", "cancel", "trace", "attach", "sync", "check"]);
 
 const HELP = `ISA — Issues-as-Code CLI. Issue documents live in the repository under docs/issues/ and every non-merge commit carries exactly one "Issue: <id>" trailer.
 
 Usage:
+  isa init [-t <path>] [--dry-run]
   isa new <title...> [--section <design section>] [-t <path>] [--dry-run]
   isa list [--status <status>] [--offset <n>] [--limit <n>] [-t <path>]
   isa show <id> [-t <path>]
@@ -41,7 +43,7 @@ Options:
   -h, --help            Show this help.
   -v, --version         Show the ISA version.
 
-Active documents live under docs/issues/; closed and cancelled ones are archived to docs/issues/closed/ automatically. Attachments live under docs/issues/assets/<id>/. Every non-merge commit must contain exactly one trailer:
+Run "isa init" to adopt Issues-as-Code in a repository: it creates docs/issues/ and appends the mandatory Issues-as-Code constraint to AGENTS.md (creating the file when missing). Active documents live under docs/issues/; closed and cancelled ones are archived to docs/issues/closed/ automatically. Attachments live under docs/issues/assets/<id>/. Every non-merge commit must contain exactly one trailer:
 
   Issue: <id>
 
@@ -153,6 +155,13 @@ export async function runCli(argv: string[]): Promise<CliResult> {
   }
   if (parsed.action === undefined) {
     return { output: HELP, exitCode: 1 };
+  }
+  if (parsed.action === "init") {
+    if (parsed.values.length > 0) {
+      throw new Error("init takes no positional arguments.");
+    }
+    const output = await runInitCommand({ targetRoot: parsed.targetRoot, dryRun: parsed.dryRun });
+    return { output, exitCode: 0 };
   }
   if (parsed.action === "check") {
     if (parsed.values.length > 0) {

@@ -26,6 +26,7 @@ Each document carries YAML front matter (`id`, `status`, timestamps, `priority`,
 ## Workflow — the daily loop
 
 ```bash
+isa init               # 0. first time only: bootstrap docs/issues/ + AGENTS.md constraint (idempotent)
 isa new <title>        # 1. create the issue BEFORE touching files
 isa start <id>         # 2. validate intent, flip to in-progress
 # ... edit code, commit early and often, each commit carries `Issue: <id>` ...
@@ -77,7 +78,7 @@ For a single-commit close, run `isa close <id> --prepare` before committing: it 
 
 - Searching string literals, error messages, or config values — use `rg` or file reads.
 - Running the project's test suite — ISA validates issue documents (`isa check`), not project code.
-- Repositories that have not adopted Issues-as-Code (no `docs/issues/`) — issue commands would create process the user never asked for. Adopt it only when the user wants it.
+- Repositories that have not adopted Issues-as-Code (no `docs/issues/`) — issue commands would create process the user never asked for. Adopt it only when the user wants it, then bootstrap with `isa init`.
 - Git operations beyond the trailer convention — ISA never creates branches, commits, or hooks for you.
 
 ## Pitfalls

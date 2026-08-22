@@ -26,6 +26,7 @@ Issue 文档位于 `docs/issues/<id>-<title-slug>.md`；`close` 和 `cancel` 会
 ## 工作流 —— 日常循环
 
 ```bash
+isa init               # 0. 仅首次：引导创建 docs/issues/ 并向 AGENTS.md 写入强制约束（幂等）
 isa new <title>        # 1. 改文件之前先创建 issue
 isa start <id>         # 2. 校验意图章节，翻转为 in-progress
 # ... 写代码，小步频繁提交，每个提交带 `Issue: <id>` ...
@@ -77,7 +78,7 @@ isa close <id>
 
 - 搜索字符串字面量、错误消息或配置值——用 `rg` 或直接读文件。
 - 跑项目自己的测试套件——ISA 校验的是 issue 文档（`isa check`），不校验项目代码。
-- 尚未采纳 Issues-as-Code 的仓库（没有 `docs/issues/`）——issue 命令会制造用户从未要求的流程。只有在用户想要时才采纳。
+- 尚未采纳 Issues-as-Code 的仓库（没有 `docs/issues/`）——issue 命令会制造用户从未要求的流程。只有在用户想要时才采纳，然后用 `isa init` 引导。
 - 超出 trailer 约定的 Git 操作——ISA 不会替你建分支、提交或装 hook。
 
 ## 常见坑

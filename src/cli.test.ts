@@ -136,4 +136,20 @@ describe("runCli", () => {
   it("check rejects positional arguments", async () => {
     await expect(runCli(["check", "extra"])).rejects.toThrow("check takes no positional arguments.");
   });
+
+  it("init bootstraps docs/issues/ and AGENTS.md end to end", async () => {
+    const root = await createTmpRoot();
+    const result = await runCli(["init", "-t", root]);
+    expect(result.exitCode).toBe(0);
+    expect(result.output).toContain("created docs/issues/");
+    expect(result.output).toContain("created AGENTS.md");
+
+    const rerun = await runCli(["init", "-t", root]);
+    expect(rerun.output).toContain("exists docs/issues/");
+    expect(rerun.output).toContain("exists AGENTS.md");
+  });
+
+  it("init rejects positional arguments", async () => {
+    await expect(runCli(["init", "extra"])).rejects.toThrow("init takes no positional arguments.");
+  });
 });

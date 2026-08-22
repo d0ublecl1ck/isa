@@ -3,3 +3,9 @@ dist/
 coverage/
 *.log
 .DS_Store
+
+# Multica agent runtime artifacts (auto-managed, not repository content)
+.agent_context/
+.multica/
+.pi/
+AGENTS.md

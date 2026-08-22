@@ -24,6 +24,7 @@ Requires Node.js ≥ 20. `isa sync` additionally requires the [GitHub CLI](https
 
 ```bash
 cd your-repo
+isa init                         # creates docs/issues/ and adds the mandatory constraint to AGENTS.md
 isa new Add local traceability   # creates docs/issues/<id>-add-local-traceability.md
 # fill in Background / Scope / Non-goals / Acceptance Criteria
 isa start <id>                   # flips to in-progress, prints the implementation prompt
@@ -35,6 +36,7 @@ isa close <id>                   # validates evidence + trailers, archives to do
 ## Commands
 
 ```text
+isa init [-t <path>] [--dry-run]
 isa new <title...> [--section <design section>] [-t <path>] [--dry-run]
 isa list [--status <status>] [--offset <n>] [--limit <n>] [-t <path>]
 isa show <id> [-t <path>]
@@ -49,6 +51,7 @@ isa sync [--pull] [--force] [-t <path>]
 isa check [-t <path>]
 ```
 
+- `init` bootstraps a repository: creates `docs/issues/` and appends the mandatory Issues-as-Code constraint to `AGENTS.md` (creating the file when missing). It is idempotent — re-running changes nothing.
 - Issue documents live at `docs/issues/<id>-<title-slug>.md`; `close`/`cancel` archive them to `docs/issues/closed/`, and every command reads both locations — closed IDs keep resolving in `show`, `trace`, and `list --status closed`.
 - The five-character lowercase hexadecimal ID is immutable; `rename` changes only the title and filename slug.
 - Front matter supports `priority` (`critical`/`high`/`medium`/`low`), `labels`, `parent`, and `blocked_by`; `isa check` validates every document and is CI-friendly.

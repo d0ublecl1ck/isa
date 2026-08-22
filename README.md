@@ -107,9 +107,14 @@ jobs:
 npm install
 npm run build
 npm test
+npm run typecheck
 ```
 
 ISA is maintained as a standalone, focused tool for Issues-as-Code.
+
+### Releasing
+
+Releases run on Changesets + GitHub Actions with npm OIDC trusted publishing: a `chore(release): version packages` PR is opened automatically on pushes to `main`, and merging it publishes to npm and creates the GitHub Release. A manual `beta` prerelease can be dispatched from the Release workflow. One-time credential setup (npm trusted publisher, GitHub App) is documented in [.github/RELEASE-SETUP.md](./.github/RELEASE-SETUP.md).
 
 ## License
 

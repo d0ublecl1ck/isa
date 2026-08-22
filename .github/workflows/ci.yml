@@ -1,0 +1,208 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  merge_group:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test_matrix:
+    name: Test (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            shell: bash
+            label: linux-node24
+            node: '24'
+            vitest_workers: 4
+          - os: ubuntu-latest
+            shell: bash
+            label: linux-node20
+            node: '20'
+            vitest_workers: 4
+          - os: macos-latest
+            shell: bash
+            label: macos-node20
+            node: '20'
+            vitest_workers: 4
+          - os: windows-latest
+            shell: pwsh
+            label: windows-node20
+            node: '20'
+            vitest_workers: 2
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Print environment diagnostics
+        run: |
+          node -p "JSON.stringify({ platform: process.platform, arch: process.arch, node: process.version })"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        if: matrix.node != '24'
+        env:
+          VITEST_MAX_WORKERS: ${{ matrix.vitest_workers }}
+        run: npm test
+
+      - name: Run tests with coverage
+        if: matrix.node == '24'
+        env:
+          VITEST_MAX_WORKERS: ${{ matrix.vitest_workers }}
+        run: npm run test:coverage
+
+      - name: Upload test coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-report-${{ github.event_name }}
+          path: coverage/
+          retention-days: 7
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # src is covered by tsconfig.json; tsconfig.test.json also pulls in the
+      # test files, which the build config excludes.
+      - name: Type check source and tests
+        run: npm run typecheck
+
+      - name: Check for build artifacts
+        run: |
+          npm run build
+          if [ ! -f "dist/cli.js" ]; then
+            echo "Error: CLI entry point dist/cli.js not found after build"
+            exit 1
+          fi
+
+  validate-changesets:
+    name: Validate Release Tracking
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'merge_group'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine release tracking
+        id: changed-changesets
+        run: |
+          changed_changesets="$(git diff --name-only --diff-filter=ACMRT origin/main...HEAD -- '.changeset/*.md' ':!.changeset/README.md')"
+          if [[ -n "$changed_changesets" ]]; then
+            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "files<<EOF"
+              echo "$changed_changesets"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
+            echo "This PR follows the normal release cadence; continuing with standard validation"
+          fi
+
+      - name: Setup Node.js
+        if: steps.changed-changesets.outputs.has_changesets == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.changed-changesets.outputs.has_changesets == 'true'
+        run: npm ci
+
+      - name: Validate release-tracked changesets
+        if: steps.changed-changesets.outputs.has_changesets == 'true'
+        env:
+          CHANGESET_FILES: ${{ steps.changed-changesets.outputs.files }}
+        run: |
+          echo "Validating changed changesets:"
+          printf '%s\n' "$CHANGESET_FILES"
+          npx changeset status --since=origin/main
+
+  required-checks-pr:
+    name: All checks passed
+    runs-on: ubuntu-latest
+    needs: [test_matrix, typecheck]
+    if: always() && (github.event_name == 'pull_request' || github.event_name == 'merge_group')
+    steps:
+      - name: Verify all checks passed
+        run: |
+          if [[ "${{ needs.test_matrix.result }}" != "success" ]]; then
+            echo "Matrix test job failed"
+            exit 1
+          fi
+          if [[ "${{ needs.typecheck.result }}" != "success" ]]; then
+            echo "Type check job failed"
+            exit 1
+          fi
+          echo "All required checks passed!"
+
+  required-checks-main:
+    name: All checks passed
+    runs-on: ubuntu-latest
+    needs: [test_matrix, typecheck]
+    if: always() && github.event_name == 'push'
+    steps:
+      - name: Verify all checks passed
+        run: |
+          if [[ "${{ needs.test_matrix.result }}" != "success" ]]; then
+            echo "Matrix test job failed"
+            exit 1
+          fi
+          if [[ "${{ needs.typecheck.result }}" != "success" ]]; then
+            echo "Type check job failed"
+            exit 1
+          fi
+          echo "All required checks passed!"

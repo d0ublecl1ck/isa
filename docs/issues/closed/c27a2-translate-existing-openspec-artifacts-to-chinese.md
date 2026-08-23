@@ -1,13 +1,14 @@
 ---
 id: c27a2
-status: in-progress
+status: closed
 created_at: 2026-08-23T11:32:30.714Z
-updated_at: 2026-08-23T11:33:20.598Z
+updated_at: 2026-08-23T11:46:27.198Z
 priority: medium
 labels: []
 parent: null
 blocked_by: []
 started_at: 2026-08-23T11:33:20.598Z
+closed_at: 2026-08-23T11:46:27.198Z
 ---
 
 # Translate existing OpenSpec artifacts to Chinese

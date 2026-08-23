@@ -1,32 +1,32 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
+# 项目上下文（可选）
+# 创建产物时会展示给 AI。
+# 可添加你的技术栈、约定、风格指南、领域知识等。
+# 示例：
 #   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+#     技术栈：TypeScript, React, Node.js
+#     我们使用 Conventional Commits
+#     领域：电商平台
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
+# 各类产物的规则（可选）
+# 为特定产物添加自定义规则。
+# 示例：
 #   rules:
 #     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
+#       - proposal 控制在 500 词以内
+#       - 始终包含 "Non-goals" 章节
 #     tasks:
-#       - Break tasks into chunks of max 2 hours
+#       - 将任务拆分为不超过 2 小时的粒度
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
+# 各类操作的指导（可选）
+# 为 apply 与 archive 的执行方式添加建议性指导。
+# 此项独立于上方的产物规则。
+# 示例：
 #   operations:
 #     apply:
 #       guidance:
-#         - Keep test summaries concise
+#         - 测试摘要保持简洁
 #     archive:
 #       guidance:
-#         - Summarize the archive outcome before finishing
+#         - 收尾前总结归档结果

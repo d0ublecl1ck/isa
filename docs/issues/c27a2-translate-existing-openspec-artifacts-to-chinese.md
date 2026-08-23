@@ -32,18 +32,23 @@ Multica TASK-43: the workspace rules now mandate (user-approved 2026-08-23) that
 
 ## Acceptance Criteria
 
-- [ ] `openspec/config.yaml` comments and examples are in Chinese; `schema: spec-driven` and all other keys/values are byte-identical.
-- [ ] All three Markdown files of the archived change `2026-08-23-converge-readme-releasing-relocate-release-setup` are in Chinese, with commands, code identifiers, file paths, URLs, and historical facts preserved verbatim.
-- [ ] OpenSpec change `translate-openspec-artifacts-to-chinese` validates via `openspec validate <change-id> --strict` (before archive) and `openspec validate --archived` (after archive).
-- [ ] `npm run build`, `npm test`, `npm run typecheck`, and `node dist/cli.js check` all pass.
+- [x] `openspec/config.yaml` comments and examples are in Chinese; `schema: spec-driven` and all other keys/values are byte-identical.
+- [x] All three Markdown files of the archived change `2026-08-23-converge-readme-releasing-relocate-release-setup` are in Chinese, with commands, code identifiers, file paths, URLs, and historical facts preserved verbatim.
+- [x] OpenSpec change `translate-openspec-artifacts-to-chinese` validates via `openspec validate <change-id> --strict` (before archive) and `openspec validate --archived` (after archive).
+- [x] `npm run build`, `npm test`, `npm run typecheck`, and `node dist/cli.js check` all pass.
 
 ## Implementation
 
-<!-- Complete after implementation. -->
+- Translated the three comment blocks in `openspec/config.yaml` (project context, per-artifact rules, per-operation guidance) into Chinese; `schema: spec-driven` and all example config key names kept verbatim — diff confirmed zero non-comment line changes.
+- Translated `proposal.md`, `design.md`, and `tasks.md` of archived change `2026-08-23-converge-readme-releasing-relocate-release-setup` into Chinese; `[x]` states, task numbering, section headings, commands, paths, URLs, and historical facts (TASK numbers, dates, PR numbers) preserved verbatim; `.openspec.yaml` left as-is.
+- Verified via extraction diff that backtick spans, paths, URLs, and checkbox markers are identical between the English originals and the Chinese translations.
+- Archived the change with `openspec archive translate-openspec-artifacts-to-chinese --skip-specs` per the TASK-38 precedent.
 
 ## Verification
 
-<!-- Add commands and results after verification. -->
+- `openspec validate translate-openspec-artifacts-to-chinese --strict` → valid (before archive); `openspec validate --archived` → all archived changes valid (after archive).
+- `npm run build` → pass; `npm test` → 120/120 pass (7 files); `npm run typecheck` → pass; `node dist/cli.js check` → "All Issues-as-Code documents are valid."
+- Diff check: non-comment lines of `openspec/config.yaml` unchanged; code spans/paths/URLs/checkboxes of the three archived Markdown files unchanged.
 
 ## Related ADRs
 

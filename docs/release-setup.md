@@ -1,5 +1,7 @@
 # 发布流程与配置清单
 
+> **维护者文档**：本文面向仓库维护者，记录发布链路的一次性凭据配置（2026-08-22 已全部完成），非贡献者向内容，仅在重新配置或迁移时参考。
+
 ISA 的发布流程移植自 [OpenSpec](https://github.com/Fission-AI/OpenSpec)，基于 **Changesets + GitHub Actions + npm OIDC trusted publishing**（无需 npm token）。
 
 ## 日常流程

@@ -31,19 +31,27 @@ Multica TASK-38 (user-approved TASK-32 review conclusion): the README `### Relea
 
 ## Acceptance Criteria
 
-- [ ] `openspec/` exists with init artifacts and the change proposal for this work validates via `openspec validate <change-id> --strict`.
-- [ ] README `### Releasing` is reduced to a brief community-facing note (mechanism in one or two sentences) with no credential-setup guidance and no link to the setup checklist.
-- [ ] `.github/RELEASE-SETUP.md` no longer exists; its content lives at `docs/release-setup.md` with a maintainer-facing note at the top.
-- [ ] No remaining references to `.github/RELEASE-SETUP.md` outside `docs/issues/closed/` historical records.
-- [ ] `npm run build`, `npm test`, `npm run typecheck`, and `node dist/cli.js check` all pass.
+- [x] `openspec/` exists with init artifacts and the change proposal for this work validates via `openspec validate <change-id> --strict`.
+- [x] README `### Releasing` is reduced to a brief community-facing note (mechanism in one or two sentences) with no credential-setup guidance and no link to the setup checklist.
+- [x] `.github/RELEASE-SETUP.md` no longer exists; its content lives at `docs/release-setup.md` with a maintainer-facing note at the top.
+- [x] No remaining references to `.github/RELEASE-SETUP.md` outside `docs/issues/closed/` historical records.
+- [x] `npm run build`, `npm test`, `npm run typecheck`, and `node dist/cli.js check` all pass.
 
 ## Implementation
 
-<!-- Complete after implementation. -->
+- `README.md` `### Releasing` rewritten to a single community-facing sentence: releases are automated with Changesets, and merging the automated `chore(release): version packages` PR publishes to npm and creates the GitHub Release. Credential-setup guidance, beta-dispatch detail, and the `./.github/RELEASE-SETUP.md` link removed.
+- `.github/RELEASE-SETUP.md` moved to `docs/release-setup.md` via `git mv`; a maintainer-facing blockquote added at the top (audience: maintainers; one-time setup completed 2026-08-22; reference only for reconfiguration or migration). No other content changed.
+- Reference sweep: `grep -rn 'RELEASE-SETUP'` over `README.md`, `docs/`, `AGENTS.md`, `skills/`, `src/`, `.github/` — the only remaining mentions outside `docs/issues/closed/` are this change's own records (this issue document and the OpenSpec change directory describing the move); no live link points at the old path.
+- OpenSpec change `converge-readme-releasing-relocate-release-setup` tasks all completed; the change is archived via `openspec archive --skip-specs` (docs-only, no spec deltas).
 
 ## Verification
 
-<!-- Add commands and results after verification. -->
+- `npm run build` — pass (`tsc -p tsconfig.json`).
+- `npm test` — 7 test files, 120 tests passed.
+- `npm run typecheck` — pass (`tsc --noEmit -p tsconfig.test.json`).
+- `node dist/cli.js check` — "All Issues-as-Code documents are valid."
+- `openspec validate converge-readme-releasing-relocate-release-setup --strict` — "Change 'converge-readme-releasing-relocate-release-setup' is valid" (run before archiving).
+- Post-archive: `openspec validate --archived` — archived change reported valid with all tasks completed.
 
 ## Related ADRs
 

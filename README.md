@@ -172,7 +172,7 @@ CI runs the test matrix on Linux (Node 20 and 24), macOS (Node 20), and Windows 
 
 ### Releasing
 
-Releases run on Changesets + GitHub Actions with npm OIDC trusted publishing: a `chore(release): version packages` PR is opened automatically on pushes to `main`, and merging it publishes `@d0ublecl1ck/isa-cli` to npm and creates the GitHub Release. A manual `beta` prerelease can be dispatched from the Release workflow (`npm install -g @d0ublecl1ck/isa-cli@beta`). One-time credential setup (npm trusted publisher, GitHub App) is documented in [.github/RELEASE-SETUP.md](./.github/RELEASE-SETUP.md).
+Releases are automated with [Changesets](https://github.com/changesets/changesets): merging the automated `chore(release): version packages` PR publishes `@d0ublecl1ck/isa-cli` to npm and creates the GitHub Release.
 
 ## License
 

@@ -1,13 +1,14 @@
 ---
 id: 581d6
-status: in-progress
+status: closed
 created_at: 2026-08-23T09:21:56.897Z
-updated_at: 2026-08-23T09:22:46.678Z
+updated_at: 2026-08-23T09:38:04.323Z
 priority: medium
 labels: []
 parent: null
 blocked_by: []
 started_at: 2026-08-23T09:22:46.678Z
+closed_at: 2026-08-23T09:38:04.323Z
 ---
 
 # Converge README Releasing section and relocate RELEASE-SETUP.md
